@@ -34,13 +34,10 @@ class Road {
   draw(ctx) {
     ctx.lineWidth = 5;
     ctx.strokeStyle = "white";
-    ctx.globalCompositeOperation = "destination-over";
 
-    for (let i = 1; i <= this.laneCount - 1; i++) {
+    for (let i = 1; i < this.laneCount; i++) {
       const x = lerp(this.left, this.right, i / this.laneCount);
-
-      ctx.setLineDash([20, 20]);
-
+      ctx.setLineDash([40, 20]);
       ctx.beginPath();
       ctx.moveTo(x, this.top);
       ctx.lineTo(x, this.bottom);
