@@ -11,14 +11,25 @@ const car = new Car(
   ),
   500,
   30,
-  50
+  50,
+  "KEYS"
 );
+const traffic = [new Car(road.getLaneCenter(1), 200, 30, 50, "DUMMY", 2)];
 
 function animate() {
+  for (let i = 0; i < traffic.length; i++) {
+    traffic[i].update(road.borders, []);
+  }
+  car.update(road.borders, traffic);
   canvas.height = window.innerHeight;
-  car.update();
+  ctx.save();
+  ctx.translate(0, -car.y + canvas.height * 0.8);
   road.draw(ctx);
+  for (let i = 0; i < traffic.length; i++) {
+    traffic[i].draw(ctx);
+  }
   car.draw(ctx);
+  ctx.restore();
   requestAnimationFrame(animate);
 }
 
