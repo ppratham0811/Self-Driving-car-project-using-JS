@@ -12,8 +12,11 @@ class Car {
     this.angle = 0;
     this.damage = false;
 
-    if (controlType == "KEYS") {
+    this.useBrain = controlType == "AI";
+
+    if (controlType == "AI") {
       this.sensors = new Sensors(this);
+      this.brain = new NeuralNetwork([this.sensors.rayCount, 6, 4]);
     }
 
     this.controls = new Controls(controlType);
@@ -27,6 +30,16 @@ class Car {
     }
     if (this.sensors) {
       this.sensors.update(roadBorders, traffic);
+      const offsets = this.sensors.readings.map((s) =>
+        s == null ? 0 : 1 - s.offset
+      );
+      const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+      if (this.useBrain) {
+        this.controls.forward = outputs[0];
+        this.controls.left = outputs[1];
+        this.controls.right = outputs[2];
+        this.controls.reverse = outputs[3];
+      }
     }
   }
 
@@ -109,11 +122,11 @@ class Car {
     this.y -= Math.cos(this.angle) * this.speed;
   }
 
-  draw(ctx) {
+  draw(ctx, drawSensor = false, color="blue") {
     if (this.damage) {
       ctx.fillStyle = "gray";
     } else {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = color;
     }
     ctx.beginPath();
     ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
@@ -122,7 +135,7 @@ class Car {
     }
     ctx.fill();
 
-    if (this.sensors) {
+    if (this.sensors && drawSensor) {
       this.sensors.draw(ctx);
     }
   }
