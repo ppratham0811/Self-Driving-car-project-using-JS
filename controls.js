@@ -6,7 +6,7 @@ class Controls {
     this.right = false;
 
     switch (type) {
-      case "KEYS":
+      case "AI":
         this.#addKeyboardListeners();
         break;
       case "DUMMY":
