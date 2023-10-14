@@ -14,7 +14,7 @@ class Car {
 
     this.useBrain = controlType == "AI";
 
-    if (controlType == "AI") {
+    if (this.useBrain) {
       this.sensors = new Sensors(this);
       this.brain = new NeuralNetwork([this.sensors.rayCount, 6, 4]);
     }
@@ -122,7 +122,7 @@ class Car {
     this.y -= Math.cos(this.angle) * this.speed;
   }
 
-  draw(ctx, drawSensor = false, color="blue") {
+  draw(ctx, drawSensor = false, color = "blue") {
     if (this.damage) {
       ctx.fillStyle = "gray";
     } else {
